@@ -1,0 +1,72 @@
+
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16.8.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.8.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+    <script src="https://unpkg.com/prop-types@15.6.1/prop-types.js"></script>
+    <style>
+        .box {
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .box--large {
+            width: 270px;
+            height: 270px;
+        }
+        .box--medium {
+            width: 180px;
+            height: 180px;
+        }
+        .box--small {
+            width: 90px;
+            height: 90px;
+        }
+    </style>
+    <script type="text/babel">
+        function useLocalStorageState(key, defaultValue = '') {
+            const [state, setState] = React.useState(() => {
+                return window.localStorage.getItem(key) || defaultValue
+            })
+
+            React.useEffect(() => {
+                window.localStorage.setItem(key, state)
+            }, [key, state])
+
+            return [state, setState]
+        }
+        
+        function Greeting() {
+            const [name, setName] = useLocalStorageState('name')
+
+            const handleChange = event => setName(event.target.value)
+
+            return (
+                <div>
+                    <form>
+                        <label htmlFor="name">Name: </label>
+                        <input value={name} id="name" onChange={handleChange} />
+                    </form>
+                    {name ? `Hello ${name}` : 'Please type your name'}
+                </div>
+            )
+        }
+
+        function App() {
+            const [count, setCount] = React.useState(0)
+
+            return (
+                <div>
+                    <button onClick={() => setCount(oldCount => oldCount + 1)}>{count}</button>
+                    <Greeting />
+                </div>
+            )
+        }
+
+
+        ReactDOM.render(<App />, document.getElementById('root'))
+    </script>
+  </body>
